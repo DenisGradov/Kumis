@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="absolute h-[100vh] w-[100vw] bg-custom-gradient"></div>
-    <div class="absolute z-[99999] max-w-[1280px] w-full left-1/2 transform -translate-x-1/2">
+    <div class="absolute z-[99999] max-w-[1280px] h-full w-full left-1/2 transform -translate-x-1/2">
       <header class="p-2 flex justify-between items-center w-full">
         <img class="cursor-pointer hover:scale-105 duration-200 select-none h-[40px] 470px:h-[90px]" src="@/assets/img/logo.png"
              alt="Kumis logo">
@@ -54,6 +54,10 @@
           </div>
         </section>
       </header>
+      <main class="">
+        <about-kumis v-if="activeTab===0"/>
+        <about-us v-else/>
+      </main>
     </div>
   </div>
 </template>
@@ -61,10 +65,14 @@
 
 <script>
 import { SunIcon, MoonIcon } from '@heroicons/vue/24/solid'
+import AboutKumis from "@/components/AboutKumis.vue";
+import AboutUs from "@/components/AboutUs.vue";
 
 export default {
   name: 'App',
   components: {
+    AboutUs,
+    AboutKumis,
     SunIcon,
     MoonIcon,
   },
