@@ -1,6 +1,5 @@
 <template>
-  <section
-      class="w-full mt-[60px] p-1 470px:mt-0 470px:absolute 470px:top-1/2 470px:-translate-y-1/2 470px:max-h-[80vh] 470px:overflow-y-auto bg-custom-gradient">
+  <section :class="['w-full mt-[60px] p-1 470px:mt-0 470px:absolute 470px:top-1/2 470px:-translate-y-1/2 470px:max-h-[80vh] 470px:overflow-y-auto', bgGradientClass]">
     <nav>
       <ul class="my-[10px] flex flex-wrap justify-between items-center gap-y-4">
         <li
@@ -9,15 +8,15 @@
             v-for="(chapter, index) in chapters"
             :key="`chapter-${chapter.id}`">
           <img src="@/assets/img/kumis.png" alt="kumis icon" class="mr-2">
-          <span class="text-lg font-semibold text-gray-800">{{ localizeText(chapter.title) }}</span>
+          <span :class="['text-lg font-semibold', textClass]">{{ localizeText(chapter.title) }}</span>
         </li>
       </ul>
     </nav>
-    <h1 class="my-5 text-center text-2xl font-bold">{{ localizeText(chapters[activeChapter].title) }}</h1>
+    <h1 :class="['my-5 text-center text-2xl font-bold', textClass]">{{ localizeText(chapters[activeChapter].title) }}</h1>
     <div class="flex items-center justify-center flex-wrap 470px:flex-nowrap">
       <img class="p-2 w-[45vw]" :src="require(`@/assets/img/${chapters[activeChapter].img}.png`)"
            :alt="`img for ${chapters[activeChapter].title}`">
-      <p class="text-lg p-2 font-bold text-gray-800">{{ localizeText(chapters[activeChapter].text) }}</p>
+      <p :class="['text-lg p-2 font-bold', textClass]">{{ localizeText(chapters[activeChapter].text) }}</p>
     </div>
   </section>
 </template>
@@ -30,6 +29,10 @@ export default {
   props: {
     activeLanguage: {
       type: Number,
+      required: true
+    },
+    isDarkMode: {
+      type: Boolean,
       required: true
     }
   },
@@ -76,6 +79,14 @@ export default {
       ]
     }
   },
+  computed: {
+    bgGradientClass() {
+      return this.isDarkMode ? 'bg-custom-gradient-dark' : 'bg-custom-gradient';
+    },
+    textClass() {
+      return this.isDarkMode ? 'text-main-text-dark' : 'text-main-text-light';
+    }
+  },
   methods: {
     localizeText(text) {
       return getText(this.activeLanguage, text);
@@ -83,9 +94,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.border {
-  border: 1px solid #ccc;
-}
-</style>

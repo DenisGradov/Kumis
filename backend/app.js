@@ -1,21 +1,111 @@
-const PORT = 3000;
+const PORT = 3030;
 
-//libs
+// libs
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import sqlite3 from "sqlite3";
+import { open } from "sqlite";
+
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors({origin: ["http://localhost:5173"], credentials: true}));
+app.use(cors({ origin: ["http://localhost:8080", "https://kumis.top"], credentials: true }));
 
-app.post("/api", (req, res) => {
-    const cookieToken = req.cookies.token;
-    console.log(cookieToken);
-    res.status(200).send({})
+// Initialize and open the database
+const dbPromise = open({
+    filename: './database.sqlite',
+    driver: sqlite3.Database
 });
 
-app.listen(PORT, () => {
+async function initializeDatabase() {
+    const db = await dbPromise;
+    await db.exec(`
+    CREATE TABLE IF NOT EXISTS visitors (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      ip TEXT,
+      visit_date DATE
+    );
+    CREATE TABLE IF NOT EXISTS counters (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      date DATE,
+      daily_visitors INTEGER,
+      monthly_visitors INTEGER,
+      total_visitors INTEGER
+    );
+  `);
+
+    // Initialize the counters if not exists
+    const today = new Date().toISOString().split('T')[0];
+    const thisMonth = today.substring(0, 7);
+
+    const counter = await db.get(`SELECT * FROM counters WHERE date = ?`, [today]);
+    if (!counter) {
+        await db.run(`
+      INSERT INTO counters (date, daily_visitors, monthly_visitors, total_visitors)
+      VALUES (?, 0, (SELECT COALESCE(SUM(daily_visitors), 0) FROM counters WHERE date LIKE ? || '%'), (SELECT COALESCE(SUM(daily_visitors), 0) FROM counters))
+    `, [today, thisMonth]);
+    }
+}
+
+async function updateCounters(db) {
+    const today = new Date().toISOString().split('T')[0];
+    const thisMonth = today.substring(0, 7);
+
+    const [daily, monthly, total] = await Promise.all([
+        db.get(`SELECT COUNT(DISTINCT ip) as count FROM visitors WHERE visit_date = ?`, [today]),
+        db.get(`SELECT COUNT(DISTINCT ip) as count FROM visitors WHERE visit_date LIKE ? || '%'`, [thisMonth]),
+        db.get(`SELECT COUNT(DISTINCT ip) as count FROM visitors`)
+    ]);
+
+    await db.run(`
+    UPDATE counters
+    SET daily_visitors = ?, monthly_visitors = ?, total_visitors = ?
+    WHERE date = ?
+  `, [daily.count, monthly.count, total.count, today]);
+}
+
+async function checkAndResetCounters() {
+    const db = await dbPromise;
+    const today = new Date().toISOString().split('T')[0];
+    const counter = await db.get(`SELECT * FROM counters ORDER BY date DESC LIMIT 1`);
+
+    if (counter && counter.date !== today) {
+        // Reset daily visitors for the new day
+        await db.run(`
+      INSERT INTO counters (date, daily_visitors, monthly_visitors, total_visitors)
+      VALUES (?, 0, ?, ?)
+    `, [today, counter.monthly_visitors, counter.total_visitors]);
+    }
+}
+
+app.post("/api/hello", async (req, res) => {
+    const db = await dbPromise;
+    const ip = req.ip;
+    const today = new Date().toISOString().split('T')[0];
+
+    // Check and reset counters if needed
+    await checkAndResetCounters();
+
+    const visitor = await db.get(`SELECT * FROM visitors WHERE ip = ? AND visit_date = ?`, [ip, today]);
+
+    if (!visitor) {
+        await db.run(`INSERT INTO visitors (ip, visit_date) VALUES (?, ?)`, [ip, today]);
+    }
+
+    await updateCounters(db);
+
+    const counters = await db.get(`SELECT * FROM counters WHERE date = ?`, [today]);
+
+    res.status(200).send({
+        dailyVisitors: counters.daily_visitors,
+        monthlyVisitors: counters.monthly_visitors,
+        totalVisitors: counters.total_visitors
+    });
+});
+
+app.listen(PORT, async () => {
+    await initializeDatabase();
     console.log(`Сервер запущен на порту ${PORT}`);
 });
