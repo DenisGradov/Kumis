@@ -1,0 +1,1 @@
+export const languageList = ['ru', 'ua', 'en', 'kz', 'nl', 'de'];

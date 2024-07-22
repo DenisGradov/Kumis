@@ -10,7 +10,7 @@
             <li @click="activeTab = index" v-for="(tab, index) in tabs" :key="tab"
                 class="470px:m-5 m-1 cursor-pointer hover:scale-105 duration-200 select-none 470px:text-[24px] text-[16px]"
                 :class="[mainStyles.textButtons, { 'font-bold 470px:text-[24px] text-[16px]': index === activeTab }]">
-              {{ tab }}
+              {{ getText(tab) }}
             </li>
           </ul>
         </nav>
@@ -44,7 +44,7 @@
                 leave-from-class="transform translate-y-[0px] scale-100 opacity-100"
                 leave-to-class="transform translate-y-[-150px] scale-95 opacity-0">
               <div ref="LanguageList" v-if="isLanguageListOpen"
-                   class="absolute flex flex-col items-start mt-[40px] bg-[#3f4f5a] w-[100px] rounded">
+                   class="z-[99999] fixed flex flex-col items-start mt-[40px] bg-[#3f4f5a] w-[100px] rounded">
                 <div v-for="(lang, index) in filteredLanguages" @click="setActiveLanguage(index)" :key="`languageFlag-${lang}`" class="p-2 flex items-center hover:bg-[#59666f] w-full select-none cursor-pointer">
                   <img :src="require(`@/assets/img/flags/${lang}.png`)" :alt="`language ${lang}`" class="w-[20px] h-[20px] mr-2"/>
                   <span class="text-white">{{ lang }}</span>
@@ -55,18 +55,19 @@
         </section>
       </header>
       <main class="">
-        <about-kumis v-if="activeTab===0"/>
-        <about-us v-else/>
+        <about-kumis v-if="activeTab === 0" :active-language="activeLanguage" />
+        <about-us v-else :active-language="activeLanguage" />
       </main>
     </div>
   </div>
 </template>
 
-
 <script>
 import { SunIcon, MoonIcon } from '@heroicons/vue/24/solid'
 import AboutKumis from "@/components/AboutKumis.vue";
 import AboutUs from "@/components/AboutUs.vue";
+import { getText } from '@/utiles/utiles.js';
+import { languageList } from '@/constants/constants';
 
 export default {
   name: 'App',
@@ -80,14 +81,13 @@ export default {
     document.addEventListener('click', this.handleClickOutside);
     const language = localStorage.getItem('language')
     const firstOnSite = localStorage.getItem('firstOnSite')
-    console.log()
-    if (firstOnSite===null){
-      this.activeLanguage = this.languageList.indexOf(this.getBrowserLanguage())
+    if (firstOnSite === null) {
+      this.activeLanguage = languageList.indexOf(this.getBrowserLanguage())
       localStorage.setItem('firstOnSite', 'true');
       localStorage.setItem('language', this.activeLanguage);
       //Тут должен быть запрос на бек, как вход уникального юзера
     } else {
-      this.activeLanguage = language!=null?language:0
+      this.activeLanguage = language != null ? parseInt(language) : 0
     }
   },
   beforeUnmount() {
@@ -99,8 +99,8 @@ export default {
       activeLanguage: 2,  // Индекс начального языка (en)
       isDarkMode: false,
       isLanguageListOpen: false,
-      languageList: ['ru', 'ua', 'en', 'kz', 'nl'],
-      tabs: ['О кумысе', 'О нас'],
+      languageList, // используем импортированный список языков
+      tabs: ['aboutKumis', 'aboutUs'],
       mainStyles: {
         textButtons: 'text-main-text font-roboto text-[20px]',
       },
@@ -131,12 +131,14 @@ export default {
         this.isLanguageListOpen = false;
       }
     },
-    getBrowserLanguage(){
+    getBrowserLanguage() {
       return (navigator.language || navigator.userLanguage).slice(0, 2);
+    },
+    getText(text) {
+      return getText(this.activeLanguage, text);
     }
   }
 }
-
 </script>
 
 <style scoped>
