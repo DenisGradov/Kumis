@@ -8,7 +8,7 @@
 
 ### You can watch [short video review](https://youtu.be/KMbhWf6lDHY), or you can read this post
 
-![screen](https://github.com/DenisGradov/Kumis/git-imgs/allSite.png?raw=true)
+![screen](https://github.com/DenisGradov/Kumis/blob/main/git-imgs/allSite.png?raw=true)
 
 ### Chapters
 
@@ -28,8 +28,8 @@
 ### In the site header you can see the site logo itself (by the way, the logo and other photos of the site were generated using CHATGPT), navigation buttons (I decided not to use a router, because the site is quite simple) and buttons for changing the language and color Topics. The last two elements deserve special attention. The site supports 6 languages ​​(Ukrainian, Russian, Kazakh, English, Dutch and German), the site also supports light and dark themes. When you first launch the site on a device, the site installs the language and theme that the site visitor has on the device. Later, the user can change these parameters himself in the site header. All text messages, all meta tags (for example, with keywords and site descriptions), site name - are displayed in the selected language
 
 
-![screen](https://github.com/DenisGradov/Kumis/git-imgs/header1.png?raw=true)
-![screen](https://github.com/DenisGradov/Kumis/git-imgs/header2.png?raw=true)
+![screen](https://github.com/DenisGradov/Kumis/blob/main/git-imgs/header1.png?raw=true)
+![screen](https://github.com/DenisGradov/Kumis/blob/main/git-imgs/header2.png?raw=true)
 
 <a name="About_kumys"></a>
 
@@ -37,7 +37,7 @@
 
 ### This section of the site is the only section about kumys, but it is divided into 6 sub-sections. You can use the navigation to open different articles: About koumiss in general, the history of koumiss, koumiss products, health benefits, recipes based on koumiss, as well as how to milk a horse. Each section will have a small text, as well as a picture.
 
-![screen](https://github.com/DenisGradov/Kumis/git-imgs/aboutKumis.png?raw=true)
+![screen](https://github.com/DenisGradov/Kumis/blob/main/git-imgs/aboutKumis.png?raw=true)
 
 <a name="About_us"></a>
 
@@ -45,7 +45,7 @@
 
 ### This displays the number of unique visitors to the site per day, month, all the time. The function of the counter is performed by the backend, which stores the users’ IPs (the site does not save any data other than the IP. This same IP is needed only to identify the user, so that it would be impossible to “artificially” break the counter). There are also links to the author’s telegram and github.
 
-![screen](https://github.com/DenisGradov/Kumis/git-imgs/aboutUs.png?raw=true)
+![screen](https://github.com/DenisGradov/Kumis/blob/main/git-imgs/aboutUs.png?raw=true)
 
 <a name="Features"></a>
 
@@ -57,7 +57,7 @@
 * The site design ([layout](https://www.figma.com/design/MjiRUgvpn9xfWQzulohnVn/Untitled?node-id=16-50&t=ZQrErRU0Y8qslwbE-1)) was developed by me, so the site is not very beautiful. But if you look at what I did before, the progress is noticeable
 * This is my first project in which I took a responsible approach to Git version control. The versions themselves have their own numbers. Commits are signed informatively
 
-![screen](https://github.com/DenisGradov/Kumis/git-imgs/time-for-project.png?raw=true)
+![screen](https://github.com/DenisGradov/Kumis/blob/main/git-imgs/time-for-project.png?raw=true)
 
 <a name="launch"></a>
 
@@ -87,8 +87,8 @@
 
 ## Version log ([to the beginning](#beginning))
 
-## new - v1.1.0: Cosmetic changes to the site. Final readme.md:
-Removed unnecessary garbage from the code. Updated readme.md
+## new - v1.1.1: Fix img in readme.md:
+Fix path img in readme.md
 
 ### v1.0.2: Minor improvements to adaptability:
 
