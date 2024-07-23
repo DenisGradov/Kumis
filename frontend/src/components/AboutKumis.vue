@@ -1,10 +1,10 @@
 <template>
   <section :class="['w-full mt-[60px] p-1 470px:mt-0 470px:absolute 470px:top-1/2 470px:-translate-y-1/2 470px:max-h-[80vh] 470px:overflow-y-auto', bgGradientClass]">
     <nav>
-      <ul class="my-[10px] flex flex-wrap justify-between items-center gap-y-4">
+      <ul class="my-[10px] flex flex-wrap justify-center 1100px:justify-between items-center gap-y-4">
         <li
             @click="activeChapter=index"
-            class="m-1 flex items-center cursor-pointer hover:scale-105 transition-transform duration-200 select-none"
+            class="mx-5 1100px:m-1 flex items-center cursor-pointer hover:scale-105 transition-transform duration-200 select-none"
             v-for="(chapter, index) in chapters"
             :key="`chapter-${chapter.id}`">
           <img src="@/assets/img/kumis.png" alt="kumis icon" class="mr-2">
@@ -12,9 +12,9 @@
         </li>
       </ul>
     </nav>
-    <h1 :class="['my-5 text-center text-2xl font-bold', textClass]">{{ localizeText(chapters[activeChapter].title) }}</h1>
-    <div class="flex items-center justify-center flex-wrap 470px:flex-nowrap">
-      <img class="p-2 w-[45vw]" :src="require(`@/assets/img/${chapters[activeChapter].img}.png`)"
+    <h1 :class="['mt-[60px] mb-[20px] text-center text-2xl font-bold', textClass]">{{ localizeText(chapters[activeChapter].title) }}</h1>
+    <div class="flex items-center justify-center flex-wrap 1100px:flex-nowrap">
+      <img class="p-2 w-[80vw] " :src="require(`@/assets/img/${chapters[activeChapter].img}.png`)"
            :alt="`img for ${chapters[activeChapter].title}`">
       <p :class="['text-lg p-2 font-bold', textClass]">{{ localizeText(chapters[activeChapter].text) }}</p>
     </div>

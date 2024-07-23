@@ -3,13 +3,13 @@
     <div :class="['absolute h-[100vh] w-[100vw]', bgGradientClass]"></div>
     <div class="absolute z-[99999] max-w-[1280px] h-full w-full left-1/2 transform -translate-x-1/2">
       <header class="p-2 flex justify-between items-center w-full">
-        <img class="cursor-pointer hover:scale-105 duration-200 select-none h-[40px] 470px:h-[90px]"
+        <img class="cursor-pointer hover:scale-105 duration-200 select-none h-[40px] 470px:h-[65px]"
              src="@/assets/img/logo.png"
              alt="Kumis logo">
         <nav>
           <ul class="flex items-center">
             <li @click="activeTab = index" v-for="(tab, index) in tabs" :key="tab"
-                class="470px:m-5 m-1 cursor-pointer hover:scale-105 duration-200 select-none 470px:text-[24px] text-[16px]"
+                class="470px:m-5 m-2 cursor-pointer hover:scale-105 duration-200 select-none 470px:text-[24px] text-[15px]"
                 :class="[mainStyles.textButtons, textClass, { 'font-bold 470px:text-[24px] text-[16px]': index === activeTab }]">
               {{ getText(tab) }}
             </li>
