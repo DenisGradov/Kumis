@@ -1,17 +1,9 @@
-const webpack = require('webpack');
-
 module.exports = {
-  configureWebpack: {
-    plugins: [
-      new webpack.DefinePlugin({
-        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(true)
-      }),
-      new webpack.HotModuleReplacementPlugin() // Включаем HMR
-    ]
-  },
   devServer: {
-    hot: true,
-    liveReload: false,
-    allowedHosts: 'all'
+    host: '0.0.0.0', // Указывает, что сервер должен слушать на всех доступных сетевых интерфейсах
+    port: 8080, // Замените на ваш порт, если используется другой
+    allowedHosts: 'all', // Разрешает все хосты
+    hot: false, // Явно отключает Hot Module Replacement (HMR)
+    liveReload: false // Отключает live reload
   }
 }

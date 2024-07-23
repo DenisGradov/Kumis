@@ -104,7 +104,6 @@ export default {
     axios
         .post(`https://backend.kumis.top/api/hello`, {})
         .then((response) => {
-          console.log(response.data)
           this.counter = response.data
         })
         .catch((error) => {
