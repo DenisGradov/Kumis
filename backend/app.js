@@ -1,17 +1,19 @@
-const PORT = 3030;
-
-// libs
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import sqlite3 from "sqlite3";
-import { open } from "sqlite";
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
 
 dotenv.config();
 
 const app = express();
+const PORT = 3030;
+
+// Middleware
+
+// Настройка CORS
+app.use(cors({ origin: ['https://kumis.top','http://kumis.top', 'http://localhost:8080'] }));
 app.use(express.json());
-app.use(cors({ origin: ["http://localhost:8080", "https://kumis.top"], credentials: true }));
 
 // Initialize and open the database
 const dbPromise = open({
@@ -36,7 +38,6 @@ async function initializeDatabase() {
     );
   `);
 
-    // Initialize the counters if not exists
     const today = new Date().toISOString().split('T')[0];
     const thisMonth = today.substring(0, 7);
 
@@ -105,7 +106,7 @@ app.post("/api/hello", async (req, res) => {
     });
 });
 
-app.listen(PORT, async () => {
+app.listen(PORT, '0.0.0.0', async () => {
     await initializeDatabase();
     console.log(`Сервер запущен на порту ${PORT}`);
 });

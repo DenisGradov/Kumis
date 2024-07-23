@@ -102,12 +102,13 @@ export default {
     }
     this.updateMetaTags();
     axios
-        .post(`https://kumis.top/api/hello`, {})
+        .post(`https://backend.kumis.top/api/hello`, {})
         .then((response) => {
+          console.log(response.data)
           this.counter = response.data
         })
         .catch((error) => {
-          console.error("Token validation failed", error);
+          console.error("request to back is error", error);
         })
   },
   beforeUnmount() {
