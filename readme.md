@@ -87,7 +87,10 @@
 
 ## Version log ([to the beginning](#beginning))
 
-## new - v1.2.0: Backend improvement:
+## new - v1.2.1: Emergency fix for the problem of obtaining an IP backend:
+The backend recorded the local IP instead of the user's IP. It was necessary to slightly change the code so that the backend would record the real IP
+
+### v1.2.0: Backend improvement:
 Improved the operation of counters (counters work more correctly, their mechanics have been improved)
 
 ### v1.1.1: Fix img in readme.md:

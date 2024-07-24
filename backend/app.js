@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
+import requestIp from 'request-ip';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const PORT = 3030;
 // Настройка CORS
 app.use(cors({ origin: ['https://kumis.top','http://kumis.top', 'http://localhost:8080'] }));
 app.use(express.json());
+app.use(requestIp.mw());
 
 // Initialize and open the database
 const dbPromise = open({
@@ -93,7 +95,7 @@ async function checkAndResetCounters() {
 
 app.post("/api/hello", async (req, res) => {
     const db = await dbPromise;
-    const ip = req.ip;
+    const ip = req.clientIp;
     const today = new Date().toISOString().split('T')[0];
 
     // Check and reset counters if needed
