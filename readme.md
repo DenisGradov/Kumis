@@ -87,7 +87,10 @@
 
 ## Version log ([to the beginning](#beginning))
 
-## new - v1.1.1: Fix img in readme.md:
+## new - v1.2.0: Backend improvement:
+Improved the operation of counters (counters work more correctly, their mechanics have been improved)
+
+### v1.1.1: Fix img in readme.md:
 Fix path img in readme.md
 
 ### v1.0.2: Minor improvements to adaptability:

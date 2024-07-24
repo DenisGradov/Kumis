@@ -50,7 +50,7 @@ async function initializeDatabase() {
     }
 }
 
-async function updateCounters(db) {
+async function updateCounters(db, isNewVisitor) {
     const today = new Date().toISOString().split('T')[0];
     const thisMonth = today.substring(0, 7);
 
@@ -60,11 +60,15 @@ async function updateCounters(db) {
         db.get(`SELECT COUNT(DISTINCT ip) as count FROM visitors`)
     ]);
 
-    await db.run(`
-    UPDATE counters
-    SET daily_visitors = ?, monthly_visitors = ?, total_visitors = ?
-    WHERE date = ?
-  `, [daily.count, monthly.count, total.count, today]);
+    const counters = await db.get(`SELECT * FROM counters WHERE date = ?`, [today]);
+
+    if (isNewVisitor) {
+        await db.run(`
+        UPDATE counters
+        SET daily_visitors = ?, monthly_visitors = ?, total_visitors = ?
+        WHERE date = ?
+      `, [daily.count, monthly.count, total.count, today]);
+    }
 }
 
 async function checkAndResetCounters() {
@@ -73,11 +77,17 @@ async function checkAndResetCounters() {
     const counter = await db.get(`SELECT * FROM counters ORDER BY date DESC LIMIT 1`);
 
     if (counter && counter.date !== today) {
+        const thisMonth = today.substring(0, 7);
+        const lastMonth = counter.date.substring(0, 7);
+
+        // Reset monthly visitors if a new month has started
+        const monthlyVisitors = thisMonth !== lastMonth ? 0 : counter.monthly_visitors;
+
         // Reset daily visitors for the new day
         await db.run(`
       INSERT INTO counters (date, daily_visitors, monthly_visitors, total_visitors)
       VALUES (?, 0, ?, ?)
-    `, [today, counter.monthly_visitors, counter.total_visitors]);
+    `, [today, monthlyVisitors, counter.total_visitors]);
     }
 }
 
@@ -91,11 +101,13 @@ app.post("/api/hello", async (req, res) => {
 
     const visitor = await db.get(`SELECT * FROM visitors WHERE ip = ? AND visit_date = ?`, [ip, today]);
 
+    let isNewVisitor = false;
     if (!visitor) {
         await db.run(`INSERT INTO visitors (ip, visit_date) VALUES (?, ?)`, [ip, today]);
+        isNewVisitor = true;
     }
 
-    await updateCounters(db);
+    await updateCounters(db, isNewVisitor);
 
     const counters = await db.get(`SELECT * FROM counters WHERE date = ?`, [today]);
 
